@@ -1,7 +1,7 @@
 from flask import redirect, render_template, render_template_string, Blueprint
 from flask import request, url_for, flash
 
-import app.lib.vision as v
+import app.utils.vision as v
 from app.init_app import app
 
 @app.route("/")
