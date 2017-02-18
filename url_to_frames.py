@@ -3,6 +3,7 @@ import requests
 import time
 
 from PIL import Image
+from google.cloud import vision
 from io import BytesIO
 
 
@@ -98,6 +99,18 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length):
             timestamp += frame_interval
 
     return frames
+
+def get_labels(frames):
+    client = vision.Client('search-within-video')
+
+    img = client.image(filename='img/dood.png')
+
+    labels = img.detect_labels()
+
+    returnStr = "";
+    for label in labels:
+        returnStr += str(label.description) + " - " + str(label.score) + '\n'
+    return returnStr
 
 
 if __name__ == '__main__':
