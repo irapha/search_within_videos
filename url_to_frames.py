@@ -101,16 +101,17 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length):
     return frames
 
 def get_labels(frames):
-    client = vision.Client('search-within-video')
+    client = vision.Client('searchwithinvideo')
 
-    img = client.image(filename='img/dood.png')
+    new_frames = {}
+    for timestamp, curr_img in frames.iteritems():
+        img = client.image(content=curr_img)
+        labels = img.detect_labels()
+        time.sleep(0.25) # don't set off the firewallll
+        new_frames[timestamp] = (curr_img, [l.description for l in labels])
+        print('{}\t{}'.format(timestamp, [l.description for l in labels]))
 
-    labels = img.detect_labels()
-
-    returnStr = "";
-    for label in labels:
-        returnStr += str(label.description) + " - " + str(label.score) + '\n'
-    return returnStr
+    return new_frames
 
 
 if __name__ == '__main__':
@@ -120,4 +121,5 @@ if __name__ == '__main__':
     frames = get_timestamped_frames(
             *get_mosaics(page_content),
             get_vid_length(page_content))
+    labeled_frames = get_labels(frames)
 
