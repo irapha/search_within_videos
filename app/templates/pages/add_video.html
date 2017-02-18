@@ -1,0 +1,31 @@
+{% extends "common/page_base.html" %}
+
+{% block content %}
+
+<h1>Add a Video</h1>
+
+<form id="addvideo" action="/add_video" method="POST" enctype="">
+
+	<input id="urlbox" type="text" name="url">
+	<input type="submit" value="Process">
+
+</form>
+
+<script>
+
+var form = $("#addvideo");
+form.submit(function(e) {
+	e.preventDefault();
+	$.ajax({
+		type: form.attr("method"),
+		url: form.attr("action"),
+		data: form.serialize(),
+		success: function(data) {
+			
+		}
+	});
+});
+
+</script>
+
+{% endblock %}
