@@ -104,6 +104,7 @@ if __name__ == '__main__':
     url = 'https://www.youtube.com/watch?v=OvXHbJzWMqI'
     page_content = get_page_source(url)
 
-    vid_length = get_vid_length(page_content)
-    frames = get_timestamped_frames(*get_mosaics(page_content), vid_length)
+    frames = get_timestamped_frames(
+            *get_mosaics(page_content),
+            get_vid_length(page_content))
 
