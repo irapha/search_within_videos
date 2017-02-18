@@ -29,3 +29,5 @@ Flask-Migrate==2.0.2
 Flask-Script==2.0.5
 Flask-WTF==0.13.1
 Flask-Mail
+youtube-dl==2017.2.17
+algoliasearch==1.11.2

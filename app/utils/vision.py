@@ -41,7 +41,7 @@ def get_mosaics(page_content):
 
         time.sleep(0.5) # do not set off youtube's firewall
         m_value += 1
-
+    
     return img_keys, imgs, l_value
 
 def get_vid_length(page_content):
@@ -101,18 +101,19 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length):
     return frames
 
 def get_labels(frames):
-    client = vision.Client('searchwithinvideos')
-
+    client = vision.Client('treehacks-159123')
     new_frames = {}
+    i = 0
     for timestamp, curr_img in frames.items():
         img_bytes = BytesIO()
         curr_img.save(img_bytes, format='png')
 
         img = client.image(content=img_bytes.getvalue())
         labels = img.detect_labels()
-        time.sleep(0.25) # don't set off the firewallll
+        time.sleep(0.05) # don't set off the firewallll
         new_frames[timestamp] = (curr_img, [l.description for l in labels])
-
+        print ('{}/{}'.format(str(i), len(frames)), end='\r')
+        i += 1
     return new_frames
 
 def get_labels_from_url(url):

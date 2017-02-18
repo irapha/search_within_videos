@@ -1,7 +1,7 @@
 from flask import redirect, render_template, render_template_string, Blueprint
 from flask import request, url_for, flash
 
-import app.utils.vision as v
+from app.utils import tag
 from app.init_app import app
 
 @app.route("/")
@@ -15,5 +15,5 @@ def add():
 @app.route("/add_video", methods=['POST'])
 def add_video():
     url = request.form["url"]
-    frames = v.get_labels_from_url(url)
-    return frames
+    tag.tag_and_upload(url)
+    return 'yay'
