@@ -97,6 +97,8 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length):
             frames[timestamp] = curr_img.crop((x, y, x+frame_width, y+frame_height))
             timestamp += frame_interval
 
+    return frames
+
 
 if __name__ == '__main__':
     url = 'https://www.youtube.com/watch?v=OvXHbJzWMqI'
