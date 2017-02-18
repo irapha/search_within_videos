@@ -6,9 +6,13 @@ from PIL import Image
 from io import BytesIO
 
 
-def get_mosaics(url):
+def get_page_source(url):
     r = requests.get(url)
-    match = re.search('\"storyboard_spec\":\"([^\"]*)\"', str(r.content)).group(1).replace('\\\\', '')
+    return str(r.content)
+
+def get_mosaics(page_content):
+    match = (re.search('\"storyboard_spec\":\"([^\"]*)\"', page_content)
+            .group(1).replace('\\\\', ''))
     sighs = re.findall('\$M#([^\|$]+)(?:\||$)', match)
     base_url = match[:match.find('|')] + '?sigh=$S'
 
@@ -18,17 +22,17 @@ def get_mosaics(url):
 
     base_url = base_url.replace('$L', str(l_value)).replace('$S', sigh)
 
+    # get all mosaics
     imgs = {}
     img_keys = []
-
-    # get all mosaics
     while True:
         mosaic_url = base_url.replace('$N', 'M{}'.format(m_value))
-        img_keys.append('mosaics/L{}_M{}_{}'.format(l_value, m_value, sigh))
+        img_keys.append('L{}_M{}_{}'.format(l_value, m_value, sigh))
 
         r = requests.get(mosaic_url, stream=True)
         if r.status_code != 200:
-            print('failed on img_key={}'.format(img_keys[-1]))
+            print('failed on img_key={}, so we\'re done'.format(img_keys[-1]))
+            img_keys.pop()
             break
 
         r.raw.decode_content = True
@@ -39,12 +43,38 @@ def get_mosaics(url):
 
     return img_keys, imgs, l_value
 
+def get_vid_length(page_content):
+    return int(re.search(
+        '\"length\_seconds\":\"([0-9]*)\"',
+        page_content).group(1))
+
+def get_frame_interval(vid_length):
+    if 15 <= vid_length < 120: return 1
+    elif 120 <= vid_length < 300: return 2
+    elif 300 <= vid_length < 900: return 5
+    else: return 10
+
+def get_timestamped_frames(img_keys, imgs, level, vid_length):
+    level_to_mosaic_shape = {1: 10, 2: 5, 3: 9, 4: 3}
+    shape = level_to_mosaic_shape[level] # each mosaic has shape x shape frames
+    frame_interval = get_frame_interval(vid_length)
+    num_frames = (vid_length / frame_interval) + 2 # 1st & last frame always in
+
+    num_full_rows = num_frames // shape
+    num_last_row = round((num_frames / shape - num_full_rows) * shape)
+
+    for row_idx in range(num_full_rows):
+        for frame_idx in range(shape):
+            # determine what img we're looking at
+            # determine the height of a frame
+            # crop and add to list
+
+
 
 if __name__ == '__main__':
     url = 'https://www.youtube.com/watch?v=OvXHbJzWMqI'
-    level_to_shape = {1: (40, 30), 2: (80, 60), 3: (160, 120), 4: (320, 240)}
+    page_content = get_page_source(url)
 
-    img_keys, imgs, level = get_mosaics(url)
-    print('\n'.join(img_keys))
+    vid_length = get_vid_length(page_content)
+    frames = get_timestamped_frames(*get_mosaics(page_content), vid_length)
 
-    shape = level_to_shape[level]
