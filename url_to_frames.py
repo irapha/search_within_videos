@@ -54,21 +54,48 @@ def get_frame_interval(vid_length):
     elif 300 <= vid_length < 900: return 5
     else: return 10
 
+def get_frame_dims(mosaic_w, mosaic_h, num_full_rows, num_last_row, shape):
+    if num_full_rows == 0:
+        frame_width = mosaic_w // num_last_row
+    else:
+        frame_width = mosaic_w // shape
+
+    if num_full_rows >= shape:
+        frame_height = mosaic_h // shape
+    else:
+        frame_height = mosaic_h // num_full_rows
+
+    return frame_width, frame_height
+
 def get_timestamped_frames(img_keys, imgs, level, vid_length):
     level_to_mosaic_shape = {1: 10, 2: 5, 3: 9, 4: 3}
     shape = level_to_mosaic_shape[level] # each mosaic has shape x shape frames
     frame_interval = get_frame_interval(vid_length)
     num_frames = (vid_length / frame_interval) + 2 # 1st & last frame always in
 
-    num_full_rows = num_frames // shape
+    num_full_rows = int(num_frames // shape)
     num_last_row = round((num_frames / shape - num_full_rows) * shape)
 
-    for row_idx in range(num_full_rows):
-        for frame_idx in range(shape):
-            # determine what img we're looking at
-            # determine the height of a frame
-            # crop and add to list
+    frame_width, frame_height = get_frame_dims(
+            imgs[img_keys[0]].size[0], imgs[img_keys[0]].size[1],
+            num_full_rows, num_last_row, shape)
 
+    timestamp = 0
+    frames = {}
+
+    for row_idx in range(num_full_rows):
+        for col_idx in range(shape):
+            # determine what img we're looking at
+            global_frame_idx = row_idx * shape + col_idx
+            img_idx = (global_frame_idx // (shape * shape))
+            curr_img = imgs[img_keys[img_idx]]
+            curr_img_row = round(((row_idx / shape) % 1) * shape)
+
+            # crop and add to list with incrementing timestamp
+            x = col_idx * frame_width
+            y = curr_img_row * frame_height
+            frames[timestamp] = curr_img.crop((x, y, x+frame_width, y+frame_height))
+            timestamp += frame_interval
 
 
 if __name__ == '__main__':
