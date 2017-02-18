@@ -101,11 +101,14 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length):
     return frames
 
 def get_labels(frames):
-    client = vision.Client('searchwithinvideo')
+    client = vision.Client('searchwithinvideos')
 
     new_frames = {}
-    for timestamp, curr_img in frames.iteritems():
-        img = client.image(content=curr_img)
+    for timestamp, curr_img in frames.items():
+        img_bytes = BytesIO()
+        curr_img.save(img_bytes, format='png')
+
+        img = client.image(content=img_bytes.getvalue())
         labels = img.detect_labels()
         time.sleep(0.25) # don't set off the firewallll
         new_frames[timestamp] = (curr_img, [l.description for l in labels])
