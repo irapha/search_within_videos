@@ -1,7 +1,9 @@
 import re
 import requests
-import shutil
 import time
+
+from PIL import Image
+from io import BytesIO
 
 
 def url_to_frames(url):
@@ -17,24 +19,27 @@ def url_to_frames(url):
 
     base_url = base_url.replace('$L', str(l_value)).replace('$S', sigh)
 
+    imgs = {}
+    img_keys = []
+
+    # get all mosaics
     while True:
         mosaic_url = base_url.replace('$N', 'M{}'.format(m_value))
+        img_keys.append('mosaics/L{}_M{}_{}'.format(l_value, m_value, sigh))
 
         r = requests.get(mosaic_url, stream=True)
         if r.status_code != 200:
-            print('failed on m_value={}'.format(m_value))
+            print('failed on img_key={}'.format(img_keys[-1]))
             break
 
-        with open('mosaics/L{}_M{}_{}'.format(l_value, m_value, sigh), 'wb') as f:
-            r.raw.decode_content = True
-            shutil.copyfileobj(r.raw, f)
+        r.raw.decode_content = True
+        imgs[img_keys[-1]] = Image.open(r.raw)
 
-        time.sleep(0.5)
-
+        time.sleep(0.5) # do not set off youtube's firewall
         m_value += 1
 
-    # print(re.search('\$M#', match).pos) # do not work. but we want all positions where this happens
-    print(base_url) # replace $L with the l-number, $N with 'M0', 'M1', etc, and add '?sigh=' + the matched thing from above
+    return img_keys, imgs
+
 
 
 if __name__ == '__main__':
