@@ -6,8 +6,7 @@ from PIL import Image
 from io import BytesIO
 
 
-def url_to_frames(url):
-    """given a url, get a list of timestamped frames"""
+def get_mosaics(url):
     r = requests.get(url)
     match = re.search('\"storyboard_spec\":\"([^\"]*)\"', str(r.content)).group(1).replace('\\\\', '')
     sighs = re.findall('\$M#([^\|$]+)(?:\||$)', match)
@@ -38,10 +37,14 @@ def url_to_frames(url):
         time.sleep(0.5) # do not set off youtube's firewall
         m_value += 1
 
-    return img_keys, imgs
-
+    return img_keys, imgs, l_value
 
 
 if __name__ == '__main__':
     url = 'https://www.youtube.com/watch?v=OvXHbJzWMqI'
-    url_to_frames(url)
+    level_to_shape = {1: (40, 30), 2: (80, 60), 3: (160, 120), 4: (320, 240)}
+
+    img_keys, imgs, level = get_mosaics(url)
+    print('\n'.join(img_keys))
+
+    shape = level_to_shape[level]
