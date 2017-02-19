@@ -94,7 +94,7 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length, progress_cb, so_fa
             # crop and add to list with incrementing timestamp
             x = col_idx * frame_width
             y = curr_img_row * frame_height
-            frames[timestamp] = curr_img.crop((x, y, x+frame_width, y+frame_height))
+            frames[timestamp] = (curr_img.crop((x, y, x+frame_width, y+frame_height)), img_keys[img_idx])
             timestamp += frame_interval
 
             # update frontend progress bar
@@ -105,14 +105,15 @@ def get_labels(frames, progress_cb, so_far, task_weight):
     client = vision.Client('treehacks-159123')
     new_frames = {}
     i = 0
-    for timestamp, curr_img in frames.items():
+    for timestamp, curr in frames.items():
+        curr_img, img_key = curr
         img_bytes = BytesIO()
         curr_img.save(img_bytes, format='png')
 
         img = client.image(content=img_bytes.getvalue())
         labels = img.detect_labels()
         time.sleep(0.05) # don't set off the firewallll
-        new_frames[timestamp] = (curr_img, [l.description for l in labels])
+        new_frames[timestamp] = (curr_img, [l.description for l in labels], img_key)
         print ('{}/{}'.format(str(i), len(frames)), end='\r')
         i += 1
         progress_cb(so_far + ((i / len(frames.items())) * task_weight), 100)
