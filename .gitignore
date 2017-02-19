@@ -1,6 +1,7 @@
 search/*
 mosaics/*
 frames/*
+redis-stable/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
