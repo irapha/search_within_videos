@@ -1,10 +1,12 @@
 import re
 import requests
 import time
+import youtube_dl
 
 from PIL import Image
 from google.cloud import vision
 from io import BytesIO
+
 
 def get_page_source(url):
     r = requests.get(url)
@@ -119,18 +121,19 @@ def get_labels(frames, progress_cb, so_far, task_weight):
         progress_cb(so_far + ((i / len(frames.items())) * task_weight), 100)
     return new_frames
 
-def get_video_deets(page_content):
-    thumbnail_url = re.search(
-        'playlist\_iurlmq\=(https.*mqdefault\.jpg)',
-        page_content).group(1)
-    username = re.search('\"title\": \"([^\"]*)\"', page_content).group(1)
-    title = re.search('\<title\>([^\<]*)\<\/title\>', page_content).group(1)
-    desc = re.search('itemprop\=\"description\" content\=\"([^\"]*)\"', page_content).group(1)
-    return (title, username, desc, thumbnail_url)
+def get_video_deets(page_content, url):
+    ydl = youtube_dl.YoutubeDL({'writesubtitles': True})
+    with ydl:
+        res = ydl.extract_info(url, download=False)
+        thumbnail_url = res['thumbnails'][0]['url']
+        username = res['uploader_id']
+        title = res['title']
+        desc = res['description']
+        return (title, username, desc, thumbnail_url)
 
 def get_labels_from_url(url, progress_cb, so_far, task_weight):
     page_content = get_page_source(url)
-    deets = get_video_deets(page_content)
+    deets = get_video_deets(page_content, url)
     progress_cb(1, 100) # get progress bar started
     so_far += 1
     frames = get_timestamped_frames(
