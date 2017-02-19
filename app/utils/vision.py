@@ -119,8 +119,14 @@ def get_labels(frames, progress_cb, so_far, task_weight):
         progress_cb(so_far + ((i / len(frames.items())) * task_weight), 100)
     return new_frames
 
+def get_thumbnail_url(page_content):
+    return re.search(
+        'playlist\_iurlmq\=(https.*mqdefault\.jpg)',
+        page_content).group(1)
+
 def get_labels_from_url(url, progress_cb, so_far, task_weight):
     page_content = get_page_source(url)
+    thumbnail_url = get_thumbnail_url(page_content)
     progress_cb(1, 100) # get progress bar started
     so_far += 1
     frames = get_timestamped_frames(
@@ -128,5 +134,5 @@ def get_labels_from_url(url, progress_cb, so_far, task_weight):
             get_vid_length(page_content),
             progress_cb, so_far, 5) # 5 percent to get mosaics
     so_far += 5
-    return get_labels(frames, progress_cb, so_far, task_weight)
+    return get_labels(frames, progress_cb, so_far, task_weight), thumbnail_url
 

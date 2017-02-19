@@ -28,7 +28,7 @@ def merge(url, captions, frames, timestamps, progress_cb, so_far, task_weight):
 
 def tag_and_upload(url, progress_cb):
     # 70 percent
-    frames = vision.get_labels_from_url(url, progress_cb, 0, 70)
+    frames, thumbnail_url = vision.get_labels_from_url(url, progress_cb, 0, 70)
 
     # 20 percent
     timestamps = list(sorted(frames.keys()))
@@ -37,6 +37,8 @@ def tag_and_upload(url, progress_cb):
     # 10 percent
     # TODO: save images in db and store id in res too.
     res = merge(url, captions, frames, timestamps, progress_cb, 90, 10)
+    for r in res:
+        r['thumb'] = thumbnail_url
 
     index = client.init_index("frames")
     index.add_objects(res)
