@@ -6,8 +6,12 @@ p, h1, h2, h3 {
 	color: #424242;
 }
 
-h4 {
+#tagline {
+  font-size: 27px;
   color: #9E9E9E;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
 }
 
 #tube {
@@ -19,7 +23,8 @@ h4 {
 }
 
 #main_title {
-  margin: 20px;
+  margin: 20px 20px 0px 20px;
+  display: inline-block;
 }
 
 #body_container {
