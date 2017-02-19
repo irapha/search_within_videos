@@ -122,7 +122,7 @@ def get_labels(frames, progress_cb, so_far, task_weight):
     return new_frames
 
 def get_video_deets(page_content, url):
-    ydl = youtube_dl.YoutubeDL({'writesubtitles': True})
+    ydl = youtube_dl.YoutubeDL()
     with ydl:
         res = ydl.extract_info(url, download=False)
         thumbnail_url = res['thumbnails'][0]['url']

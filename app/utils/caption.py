@@ -29,7 +29,7 @@ def dict_format(captions, timestamps, progress_cb, so_far, task_weight):
     return out
 
 def getCaptions(url, progress_cb, so_far, task_weight):
-    ydl = youtube_dl.YoutubeDL({'writesubtitles': True})
+    ydl = youtube_dl.YoutubeDL({'writesubtitles': True, 'allsubtitles': True, 'writeautomaticsub': True})
     with ydl:
         res = ydl.extract_info(url, download=False)
         if res['requested_subtitles'] and res['requested_subtitles']['en']:
