@@ -37,13 +37,14 @@ def tag_and_upload(url, progress_cb):
     captions = caption.get_timestamped_captions(url, timestamps, progress_cb, 70, 20)
 
     # 10 percent
-    title, username, desc, thumbnail_url = deets
+    title, username, desc, thumbnail_url, vid_length = deets
     res = merge(url, captions, frames, timestamps, progress_cb, 90, 10)
     for r in res:
         r['title'] = title
         r['username'] = username
         r['desc'] = desc
         r['thumb'] = thumbnail_url
+        r['vid_length'] = vid_length
 
     index = client.init_index("frames")
     index.add_objects(res)

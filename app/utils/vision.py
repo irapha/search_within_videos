@@ -129,7 +129,8 @@ def get_video_deets(page_content, url):
         username = res['uploader_id']
         title = res['title']
         desc = res['description']
-        return (title, username, desc, thumbnail_url)
+        vid_length = get_vid_length(page_content)
+        return (title, username, desc, thumbnail_url, vid_length)
 
 def get_labels_from_url(url, progress_cb, so_far, task_weight):
     page_content = get_page_source(url)
@@ -138,7 +139,7 @@ def get_labels_from_url(url, progress_cb, so_far, task_weight):
     so_far += 1
     frames = get_timestamped_frames(
             *get_mosaics(page_content),
-            get_vid_length(page_content),
+            deets[-1], # vid_length
             progress_cb, so_far, 5) # 5 percent to get mosaics
     so_far += 5
     return get_labels(frames, progress_cb, so_far, task_weight), deets
