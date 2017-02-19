@@ -14,10 +14,10 @@
 
 <script type="text/html" id="hit-template">
 	<div class="hit">
-		<img src="image_url"/>
 		<div class="hit-content">
 			<h1><a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s">{{url}} at {{#helpers.helpp}}{{time}}{{/helpers.helpp}}</a></h1>
 		</div>
+		<img src="{{image_url}}"/>
 	</div>
 </script>
 
@@ -27,7 +27,15 @@ var search = instantsearch({
 	appId: 'Y9MCTNJ20T',
 	apiKey: '5c85dabf76ed1ba90c86b74f3470d965',
 	indexName: 'frames',
-	urlSync: true
+	searchFunction: function(helper) {
+	var searchResults = $('.search-results');
+		if (helper.state.query === '') {
+		  searchResults.hide();
+		  return;
+		}
+		helper.search();
+		searchResults.show();
+	}
 });
 
 search.templatesConfig.helpers.helpp = function() {
