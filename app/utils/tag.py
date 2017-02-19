@@ -2,6 +2,7 @@ from app.utils import caption
 from google.cloud import storage
 from app.utils import vision
 from algoliasearch import algoliasearch
+from urllib import parse
 
 client = algoliasearch.Client("Y9MCTNJ20T", "5c85dabf76ed1ba90c86b74f3470d965")
 IMAGE_BUCKET= 'treehacks-img'
@@ -14,7 +15,7 @@ def merge(url, captions, frames, timestamps, progress_cb, so_far, task_weight):
     for i, time in enumerate(timestamps):
         data = {}
         if time in frames:
-            blob = bucket.blob(frames[time][2])
+            blob = bucket.blob(frames[time][2] + '.png')
             blob.upload_from_string(frames[time][0])
             print(blob.public_url)
             data['labels'] = frames[time][1]
