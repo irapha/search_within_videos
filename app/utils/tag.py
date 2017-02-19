@@ -15,7 +15,8 @@ def merge(url, captions, frames, timestamps, progress_cb, so_far, task_weight):
         data = {}
         if time in frames:
             blob = bucket.blob(frames[time][2])
-            blob.upload_from_file(frames[time][0])
+            blob.upload_from_string(frames[time][0])
+            print(blob.public_url)
             data['labels'] = frames[time][1]
             data['image_url'] = blob.public_url
         if time in captions:
