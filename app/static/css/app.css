@@ -48,6 +48,7 @@ h4 {
 
 .preview, .hover_holder {
   width: 336px;
+  width: 188px;
 }
 
 .preview_container {
@@ -58,6 +59,7 @@ h4 {
 .hover_holder {
   height: 6px;
   background-color: #424242;
+  position: relative;
 }
 
 .hover {
@@ -66,6 +68,7 @@ h4 {
   height: 6px;
   width: 2px;
   display: inline-block;
+  position: absolute;
 }
 
 #header_container {
@@ -79,8 +82,27 @@ h4 {
   border-color: #9E9E9E;
 }
 
-.vid_desc {
+.vid_deets {
+  vertical-align: top;
   display: inline-block;
+  margin-left: 15px;
+  width: 464px;
+  height: 194px
+}
+
+.vid_title {
+  font-size: 26px;
+}
+
+.vid_username {
+  font-size: 14px;
+  text-align:right;
+}
+
+.vid_desc {
+  overflow: hidden;
+  height: 133px;
+  font-size: 15px;
 }
 
 input {
