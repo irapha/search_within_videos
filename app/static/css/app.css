@@ -64,13 +64,19 @@ h4 {
 }
 
 .hover {
-  background-color: #FFC107;
   vertical-align: top;
   height: 6px;
-  width: 2px;
+  width: 8px;
   display: inline-block;
   position: absolute;
+  text-align: center;
 }
+
+.hover_line {
+  background-color: #FFC107;
+  height: 6px;
+  width: 2px;
+} 
 
 #header_container {
   margin-top: 0px;
