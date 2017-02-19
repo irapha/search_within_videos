@@ -11,7 +11,7 @@ app = Flask(__name__)           # The WSGI compliant web application object
 #db = SQLAlchemy()               # Setup Flask-SQLAlchemy
 manager = Manager(app)          # Setup Flask-Script
 
-import views
+from app import views
 
 # Initialize Flask Application
 def init_app(app, extra_config_settings={}):
