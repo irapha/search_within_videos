@@ -9,14 +9,49 @@
 <div id="pagination-container"></div>
 
 {% raw %}
+
+
+
+<script type="text/html" id="hit-template">
+	<div class="hit">
+		<div class="hit-content">
+			<h1><a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s">{{url}} at {{#helpers.helpp}}{{time}}{{/helpers.helpp}}</a></h1>
+		</div>
+		<img src="{{image_url}}"/>
+	</div>
+</script>
+
 <script>
 
 var search = instantsearch({
 	appId: 'Y9MCTNJ20T',
 	apiKey: '5c85dabf76ed1ba90c86b74f3470d965',
 	indexName: 'frames',
-	urlSync: true
+	searchFunction: function(helper) {
+	var searchResults = $('.search-results');
+		if (helper.state.query === '') {
+		  searchResults.hide();
+		  return;
+		}
+		helper.search();
+		searchResults.show();
+	}
 });
+
+search.templatesConfig.helpers.helpp = function() {
+	var seconds = parseInt(this.time) / 1000;
+	console.log(seconds);
+	var minutes = Math.floor(seconds / 60);
+	console.log(minutes);
+	var rem = seconds % 60;
+	console.log(rem);
+	console.log();
+	return minutes + "m:" + rem + "s";
+};
+
+search.templatesConfig.helpers.divide = function() {
+	return this.time / 1000;
+};
 
 search.addWidget(
 	instantsearch.widgets.searchBox({
@@ -29,10 +64,12 @@ search.addWidget(
 	instantsearch.widgets.hits({
 		container: '#hits-container',
 		templates: {
-			item: '{{url}}'
+			item: getTemplate("#hit-template")
 		}
 	})
 );
+
+
 
 search.addWidget(
 	instantsearch.widgets.pagination({
@@ -41,6 +78,10 @@ search.addWidget(
 );
 
 search.start();
+
+function getTemplate(name) {
+	return document.querySelector(name).innerHTML;
+}
 
 </script>
 
