@@ -105,6 +105,7 @@ def get_labels(frames):
     new_frames = {}
     i = 0
     for timestamp, curr_img in frames.items():
+        print("doing")
         img_bytes = BytesIO()
         curr_img.save(img_bytes, format='png')
 
