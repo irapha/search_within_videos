@@ -141,6 +141,8 @@ form {
 }
 
 .vid_title {
+  overflow: hidden;
+  height: 35px;
   font-size: 26px;
 }
 
