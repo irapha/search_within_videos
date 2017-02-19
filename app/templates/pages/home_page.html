@@ -14,29 +14,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 <!-- not real lmao this is it -->
 <div id="body_container">
-  <div id="results_container">
-    <div class="result_container">
-      <div class="preview_container">
-        <img class="preview" src="https://i.ytimg.com/vi/ZaUB84dMQ9U/hqdefault.jpg?custom=true&w=336&h=188&stc=true&jpg444=true&jpgq=90&sp=68&sigh=uK1rbMa1Wwwo63_uAf5EcFpzSKU" />
-        <div class="hover_holder">
-          <div z-index="100" onclick="window.open('timestamped video url','mywindow');"
-               style="cursor: pointer; margin-left: 20%;" class="hover"
-               value="store the frame img url here and modify the img tag above">
-          </div>
-          <div z-index="100" onclick="window.open('timestamped video url','mywindow');"
-               style="cursor: pointer; margin-left: 40%" class="hover"
-               value="store the frame img url here and modify the img tag above">
-          </div>
-        </div>
-      </div>
-      <div class="vid_deets">
-        <div class="vid_title">Title</div>
-        <div class="vid_desc">desc</div>
-        <div class="vid_username">username</div>
-      </div>
-    </div>
-  </div>
-  
 </div>
 
 </script>
@@ -56,11 +33,11 @@
 			
 			</div>
 		</div>
-			<div class="vid_desc">
-				<div>{{title}}</div>
-				<div>{{username}}</div>
-				<div>{{desc}}</div>
-			</div>
+			<div class="vid_deets">
+				<div class="vid_title">{{title}}</div>
+				<div class="vid_desc">{{desc}}</div>
+				<div class="vid_username">{{username}}</div>
+      		</div>
 		</div>
 	</div>
 </script>
@@ -89,6 +66,7 @@ var search = instantsearch({
 		}
 		helper.search();
 		helper.on('result', function(data){
+			$('#body_container').empty();
 			if (data.hits && data.hits.length > 0) {
 				var dict = {};
 				for (var i = 0; i < data.hits.length; i++) {
@@ -108,7 +86,6 @@ var search = instantsearch({
 					}
 				}
 				console.log(dict);
-				$('#body_container').empty();
 				Object.keys(dict).forEach(function(key) {
 					value = dict[key];
 					$('#body_container').append(template(value));
