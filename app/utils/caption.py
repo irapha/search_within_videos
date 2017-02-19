@@ -2,7 +2,8 @@ from __future__ import unicode_literals
 import youtube_dl
 import requests
 import os
-from pyvtt import WebVTTFile
+from io import BytesIO, StringIO
+from pycaption import WebVTTReader
 
 def findMatches(captions):
     index = client.init_index("captions")
@@ -17,11 +18,11 @@ def dict_format(captions, timestamps, progress_cb, so_far, task_weight):
 
     total = len(captions)
     for i, caption in enumerate(captions):
-        caption_timestamp = caption.start.ordinal / 1000
+        caption_timestamp = caption.start / 1000000
         if diff * int(caption_timestamp / diff) not in out:
-            out[diff * int(caption_timestamp / diff)] = caption.text
+            out[diff * int(caption_timestamp / diff)] = caption.get_text()
         else:
-            out[diff * int(caption_timestamp / diff)] += ' ' + caption.text
+            out[diff * int(caption_timestamp / diff)] += ' ' + caption.get_text()
 
         # update frontend progress bar
         progress_cb(so_far + (task_weight * i / total), so_far + total)
@@ -34,16 +35,19 @@ def getCaptions(url, progress_cb, so_far, task_weight):
         if res['requested_subtitles']['en']:
             print ('Grabbing vtt file from ' + res['requested_subtitles']['en']['url'])
             response = requests.get(res['requested_subtitles']['en']['url'], stream=True)
-            with open('temp.vtt', 'wb') as handle:
-                for block in response.iter_content(1024):
-                    handle.write(block)
-            arr = WebVTTFile.open('temp.vtt')
-            os.remove('temp.vtt')
+            b = BytesIO()
+            for block in response.iter_content(1024):
+                b.write(block)
+            b.seek(0)
+            arr = WebVTTReader().read(b.read().decode('ascii'))
             progress_cb(so_far + task_weight, so_far + task_weight)
-            return arr
+            return arr.get_captions('en-US')
         else:
             print ('Youtube Video does not have any english captions')
+            return None
 
 def get_timestamped_captions(url, timestamps, progress_cb, so_far, task_weight):
     captions = getCaptions(url, progress_cb, so_far, task_weight * 0.9) # 90 percent of this task
     return dict_format(captions, timestamps, progress_cb, so_far + task_weight * 0.9, task_weight * 0.1) # 10 percent
+
+
