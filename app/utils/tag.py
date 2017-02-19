@@ -1,10 +1,10 @@
-import app.utils.caption
+from app.utils import caption
 from app.utils import vision
 from algoliasearch import algoliasearch
 
 client = algoliasearch.Client("Y9MCTNJ20T", "5c85dabf76ed1ba90c86b74f3470d965")
 
-def merge(captions, frames, timestamps, progress_cb, so_far, task_weight):
+def merge(url, captions, frames, timestamps, progress_cb, so_far, task_weight):
     out = []
     total = len(timestamps)
     for i, time in enumerate(timestamps):
@@ -16,7 +16,7 @@ def merge(captions, frames, timestamps, progress_cb, so_far, task_weight):
         data['time'] = time * 1000
         data['url'] = url
         out.append(data)
-        progress_cb(so_far + (task_weight * i / total), so_far + total)
+        progress_cb(so_far + (task_weight * (i / total)), 100)
     return out
 
 def tag_and_upload(url, progress_cb):
@@ -29,7 +29,7 @@ def tag_and_upload(url, progress_cb):
 
     # 10 percent
     # TODO: save images in db and store id in res too.
-    res = merge(captions, frames, timestamps, progress_cb, 90, 10)
+    res = merge(url, captions, frames, timestamps, progress_cb, 90, 10)
 
     index = client.init_index("frames")
     index.add_objects(res)

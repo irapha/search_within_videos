@@ -31,7 +31,7 @@ def getCaptions(url, progress_cb, so_far, task_weight):
     ydl = youtube_dl.YoutubeDL({'writesubtitles': True})
     with ydl:
         res = ydl.extract_info(url, download=False)
-        if res['requested_subtitles']['en']:
+        if res['requested_subtitles'] and res['requested_subtitles']['en']:
             print ('Grabbing vtt file from ' + res['requested_subtitles']['en']['url'])
             response = requests.get(res['requested_subtitles']['en']['url'], stream=True)
             with open('temp.vtt', 'wb') as handle:
@@ -42,6 +42,7 @@ def getCaptions(url, progress_cb, so_far, task_weight):
             progress_cb(so_far + task_weight, so_far + task_weight)
             return arr
         else:
+            return []
             print ('Youtube Video does not have any english captions')
 
 def get_timestamped_captions(url, timestamps, progress_cb, so_far, task_weight):

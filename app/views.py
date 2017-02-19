@@ -17,10 +17,9 @@ def process_video(self, url):
     """Background task that runs a long function with progress reports."""
     def progress_cb(done, total):
         self.update_state(state='PROGRESS',
-                          meta={'current': i, 'total': total})
+                          meta={'current': done, 'total': total})
     tag.tag_and_upload(url, progress_cb)
-    return {'current': 100, 'total': 100, 'status': 'Task completed!',
-            'result': 42}
+    return {'current': 100, 'total': 100, 'status': 'Task completed!', 'result': 42}
 
 @app.route("/")
 def home_page():

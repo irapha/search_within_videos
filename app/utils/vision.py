@@ -6,7 +6,6 @@ from PIL import Image
 from google.cloud import vision
 from io import BytesIO
 
-
 def get_page_source(url):
     r = requests.get(url)
     return str(r.content)
@@ -99,16 +98,14 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length, progress_cb, so_fa
             timestamp += frame_interval
 
             # update frontend progress bar
-            progress_cb(so_far + (task_weight * global_frame_idx / num_frames), so_far + num_frames)
-
+            progress_cb(so_far + (task_weight * (global_frame_idx / num_frames)), 100)
     return frames
 
-def get_labels(frames):
+def get_labels(frames, progress_cb, so_far, task_weight):
     client = vision.Client('treehacks-159123')
     new_frames = {}
     i = 0
     for timestamp, curr_img in frames.items():
-        print("doing")
         img_bytes = BytesIO()
         curr_img.save(img_bytes, format='png')
 
@@ -118,14 +115,17 @@ def get_labels(frames):
         new_frames[timestamp] = (curr_img, [l.description for l in labels])
         print ('{}/{}'.format(str(i), len(frames)), end='\r')
         i += 1
+        progress_cb(so_far + ((i / len(frames.items())) * task_weight), 100)
     return new_frames
 
 def get_labels_from_url(url, progress_cb, so_far, task_weight):
     page_content = get_page_source(url)
     progress_cb(1, 100) # get progress bar started
+    so_far += 1
     frames = get_timestamped_frames(
             *get_mosaics(page_content),
             get_vid_length(page_content),
-            progress_cb, so_far + 5, task_weight - 5) # 5 percent to get mosaics
-    return get_labels(frames)
+            progress_cb, so_far, 5) # 5 percent to get mosaics
+    so_far += 5
+    return get_labels(frames, progress_cb, so_far, task_weight)
 
