@@ -48,11 +48,12 @@ h4 {
 
 .preview, .hover_holder {
   width: 336px;
-  width: 188px;
+  height: 188px;
 }
 
 .preview_container {
   width: 336px;
+  height: 188px;
   display:inline-block;
 }
 
