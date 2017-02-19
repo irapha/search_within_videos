@@ -113,7 +113,7 @@ def get_labels(frames, progress_cb, so_far, task_weight):
         img = client.image(content=img_bytes.getvalue())
         labels = img.detect_labels()
         time.sleep(0.05) # don't set off the firewallll
-        new_frames[timestamp] = (curr_img, [l.description for l in labels], img_key)
+        new_frames[timestamp] = (img_bytes.getvalue(), [l.description for l in labels], img_key)
         print ('{}/{}'.format(str(i), len(frames)), end='\r')
         i += 1
         progress_cb(so_far + ((i / len(frames.items())) * task_weight), 100)

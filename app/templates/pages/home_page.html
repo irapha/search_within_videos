@@ -2,22 +2,25 @@
 
 {% block content %}
 
-<h1>Search for Videos lmao</h1>
+<h1>VidViz</h1>
+<h3>Search Youtube videos by what appears in them, or find where things occur in a video.</h3>
 
-<input type="text" id="search-box" />
+<input type="text" class="form-control" id="search-box" />
 <div id="hits-container"></div>
 <div id="pagination-container"></div>
 
 {% raw %}
 
-
-
 <script type="text/html" id="hit-template">
 	<div class="hit">
-		<div class="hit-content">
-			<h1><a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s">{{url}} at {{#helpers.helpp}}{{time}}{{/helpers.helpp}}</a></h1>
+		<div class="hit-img">
+			<a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s"><img src="{{image_url}}"/></a>
 		</div>
-		<img src="{{image_url}}"/>
+		<div class="hit-text">
+			<h3><a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s">{{title}}</a></h3>
+			<p>{{username}}</p>
+			<p>Term occurs at {{#helpers.format}}{{time}}{{/helpers.format}}</p>
+		</div>
 	</div>
 </script>
 
@@ -38,14 +41,10 @@ var search = instantsearch({
 	}
 });
 
-search.templatesConfig.helpers.helpp = function() {
+search.templatesConfig.helpers.format = function() {
 	var seconds = parseInt(this.time) / 1000;
-	console.log(seconds);
 	var minutes = Math.floor(seconds / 60);
-	console.log(minutes);
 	var rem = seconds % 60;
-	console.log(rem);
-	console.log();
 	return minutes + "m:" + rem + "s";
 };
 

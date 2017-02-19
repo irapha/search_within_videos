@@ -4,5 +4,35 @@ body {
 
 p, h1, h2, h3 {
 	color: #F8F8F8;
-  	font-size: 18px;
+}
+
+input {
+	border: none;
+	padding: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 75%;
+}
+
+.hit {
+	max-width: 500px;
+}
+
+.hit-img {
+	width: 200px;
+	/*float: left;
+	clear: both;*/
+}
+
+.hit-text {
+	/*float: right;
+	clear: both;*/
+}
+
+.hit-text > h3 {
+	font-size: 16px;
+}
+
+.hit-text > p {
+	font-color: #E9E9E9;
 }
