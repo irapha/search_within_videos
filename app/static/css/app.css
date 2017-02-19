@@ -43,7 +43,7 @@ h4 {
 .result_container {
   width: 900px;
   background-color: #F8F8F8;
-  padding: 20px 40px 20px 40px;
+  padding: 20px 40px 3px 40px;
 }
 
 .preview, .hover_holder {
@@ -79,8 +79,27 @@ h4 {
   border-color: #9E9E9E;
 }
 
-.vid_desc {
+.vid_deets {
+  vertical-align: top;
   display: inline-block;
+  margin-left: 15px;
+  width: 464px;
+  height: 194px
+}
+
+.vid_title {
+  font-size: 26px;
+}
+
+.vid_username {
+  font-size: 14px;
+  text-align:right;
+}
+
+.vid_desc {
+  overflow: hidden;
+  height: 133px;
+  font-size: 15px;
 }
 
 input {
