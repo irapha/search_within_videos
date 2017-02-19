@@ -28,8 +28,8 @@ var search = instantsearch({
 	apiKey: '5c85dabf76ed1ba90c86b74f3470d965',
 	indexName: 'frames',
 	searchFunction: function(helper) {
-	var searchResults = $('.search-results');
-		if (helper.state.query === '') {
+    var searchResults = $('.search-results');
+    if (helper.state.query === '') {
 		  searchResults.hide();
 		  return;
 		}
@@ -68,8 +68,6 @@ search.addWidget(
 		}
 	})
 );
-
-
 
 search.addWidget(
 	instantsearch.widgets.pagination({
