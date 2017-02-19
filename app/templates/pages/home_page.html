@@ -68,6 +68,7 @@ var search = instantsearch({
 		helper.search();
 		helper.on('result', function(data){
 			$('#body_container').empty();
+			console.log(data.hits);
 			if (data.hits && data.hits.length > 0 && data.query.length > 2) {
 				var dict = {};
 				for (var i = 0; i < data.hits.length; i++) {
@@ -87,11 +88,15 @@ var search = instantsearch({
 						}
 					}
 				}
-				console.log(dict);
-				Object.keys(dict).forEach(function(key) {
-					value = dict[key];
-					$('#body_container').append(template(value));
+				var arr = Object.keys(dict).map(function(key) {
+   					 return dict[key]
+				})
+				arr.sort(function (a,b ) {
+					return b.stamps.length - a.stamps.length;
 				});
+				for (var i = 0; i < arr.length; i++) {
+					$('#body_container').append(template(arr[i]));
+				} 
 			}
 			
 		});
