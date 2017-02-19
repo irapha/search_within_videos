@@ -11,7 +11,7 @@
 <div id="pagination-container"></div>
 
 {% raw %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 <!-- not real lmao this is it -->
 <div id="body_container">
   <div id="results_container">
@@ -36,25 +36,46 @@
       </div>
     </div>
   </div>
+  
 </div>
 
+</script>
 
-<!--<script type="text/html" id="hit-template">
-	<div class="hit">
-		<div class="hit-img">
-			<a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s"><img src="{{image_url}}"/></a>
+<script id="test" type="text/x-handlebars-template">
+	<div id="results_container">
+		<div class="result_container">
+		<div class="preview_container">
+			<img class="preview" src="{{thumb}}" thumb="{{thumb}}"/>
+			<div class="hover_holder">
+			{{#each stamps}}
+			<div z-index="100" onclick="window.open('{{url}}&t={{this.sec}}','mywindow');"
+				style="cursor: pointer; margin-left: 20%;" class="hover"
+				value="{{this.image_url}}" onmouseover="showFrame(this)" url="{{url}}", onmouseout="hideFrame(this)">
+			</div>
+			{{/each}}
+			
+			</div>
 		</div>
-		<div class="hit-text">
-			<h3><a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s">{{title}}</a></h3>
-			<p>{{username}}</p>
-			<p>Term occurs at {{#helpers.format}}{{time}}{{/helpers.format}}</p>
+			<div class="vid_desc">
+				<div>{{title}}</div>
+				<div>{{username}}</div>
+				<div>{{desc}}</div>
+			</div>
 		</div>
 	</div>
-</script>-->
-
+</script>
 <script>
-var client = algoliasearch('Y9MCTNJ20T', '5c85dabf76ed1ba90c86b74f3470d965');
-var helper = algoliasearchHelper(client, 'frames');
+function showFrame(e) {
+	var curr = $(e);
+	curr.parent().siblings('.preview').attr('src', curr.attr('value'));
+}
+function hideFrame(e) {
+	console.log('hideFrame');
+	var curr = $(e)
+	curr.parent().siblings('.preview').attr('src', curr.parent().siblings('.preview').attr('thumb'));
+}
+var source   = $("#test").html();
+var template = Handlebars.compile(source);
 
 var search = instantsearch({
 	appId: 'Y9MCTNJ20T',
@@ -68,7 +89,32 @@ var search = instantsearch({
 		}
 		helper.search();
 		helper.on('result', function(data){
-			console.log(data);
+			if (data.hits && data.hits.length > 0) {
+				var dict = {};
+				for (var i = 0; i < data.hits.length; i++) {
+					var curr = data.hits[i];
+					curr.sec = curr.time/1000;
+					if (dict[curr.url]) {
+						dict[curr.url].stamps.push(curr);
+					}
+					else {
+						dict[curr.url] = {
+							stamps: [curr],
+							desc: curr.desc,
+							title: curr.title,
+							username: curr.username,
+							thumb: curr.thumb
+						}
+					}
+				}
+				console.log(dict);
+				$('#body_container').empty();
+				Object.keys(dict).forEach(function(key) {
+					value = dict[key];
+					$('#body_container').append(template(value));
+				});
+			}
+			
 		});
 		searchResults.show();
 	}
@@ -92,26 +138,7 @@ search.addWidget(
 	})
 );
 
-search.addWidget(
-	instantsearch.widgets.hits({
-		container: '#hits-container',
-		templates: {
-			item: getTemplate("#hit-template")
-		}
-	})
-);
-
-search.addWidget(
-	instantsearch.widgets.pagination({
-		container: '#pagination-container'
-	})
-);
-
 search.start();
-
-function getTemplate(name) {
-	return document.querySelector(name).innerHTML;
-}
 
 </script>
 
