@@ -9,6 +9,18 @@
 <div id="pagination-container"></div>
 
 {% raw %}
+
+
+
+<script type="text/html" id="hit-template">
+	<div class="hit">
+		<img src="image_url"/>
+		<div class="hit-content">
+			<h1><a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s">{{url}} at {{#helpers.helpp}}{{time}}{{/helpers.helpp}}</a></h1>
+		</div>
+	</div>
+</script>
+
 <script>
 
 var search = instantsearch({
@@ -17,6 +29,21 @@ var search = instantsearch({
 	indexName: 'frames',
 	urlSync: true
 });
+
+search.templatesConfig.helpers.helpp = function() {
+	var seconds = parseInt(this.time) / 1000;
+	console.log(seconds);
+	var minutes = Math.floor(seconds / 60);
+	console.log(minutes);
+	var rem = seconds % 60;
+	console.log(rem);
+	console.log();
+	return minutes + "m:" + rem + "s";
+};
+
+search.templatesConfig.helpers.divide = function() {
+	return this.time / 1000;
+};
 
 search.addWidget(
 	instantsearch.widgets.searchBox({
@@ -29,10 +56,12 @@ search.addWidget(
 	instantsearch.widgets.hits({
 		container: '#hits-container',
 		templates: {
-			item: '{{url}}'
+			item: getTemplate("#hit-template")
 		}
 	})
 );
+
+
 
 search.addWidget(
 	instantsearch.widgets.pagination({
@@ -41,6 +70,10 @@ search.addWidget(
 );
 
 search.start();
+
+function getTemplate(name) {
+	return document.querySelector(name).innerHTML;
+}
 
 </script>
 
