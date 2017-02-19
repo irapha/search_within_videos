@@ -12,16 +12,15 @@ def findMatches(captions):
     index.add_objects(arr)
 
 def merge(captions, timestamps):
-    out = []
-    for i in range(len(timestamps) - 1):
-        currentSection = {}
-        for j in range(len(captions)):
-            if captions[j].start.ordinal > timestamps[i]*1000 and captions[j].end.ordinal < timestamps[i + 1] * 1000:
-                if 'text' not in currentSection:
-                    currentSection['text'] = captions[j].text
-                else: 
-                    currentSection['text'] += ' ' + captions[j].text
-        out.append(currentSection)
+    out = {}
+    diff = (timestamps[1] - timestamps[0])
+    
+    for caption in captions:
+        caption_timestamp = caption.start.ordinal / 1000
+        if diff * int(caption_timestamp / diff) not in out:
+            out[diff * int(caption_timestamp / diff)] = caption.text
+        else: 
+            out[diff * int(caption_timestamp / diff)] += ' ' + caption.text
     return out
 
 def getCaptions(url):
