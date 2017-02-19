@@ -43,7 +43,7 @@ h4 {
 .result_container {
   width: 900px;
   background-color: #F8F8F8;
-  padding: 20px 40px 3px 40px;
+  padding: 20px 40px 20px 40px;
 }
 
 .preview, .hover_holder {
@@ -58,6 +58,7 @@ h4 {
 .hover_holder {
   height: 6px;
   background-color: #424242;
+  position: relative;
 }
 
 .hover {
@@ -66,6 +67,7 @@ h4 {
   height: 6px;
   width: 2px;
   display: inline-block;
+  position: absolute;
 }
 
 #header_container {
