@@ -13,8 +13,16 @@ def findMatches(captions):
 
 def merge(captions, timestamps):
     out = []
-    print(timestamps)    
-    return None
+    for i in range(len(timestamps) - 1):
+        currentSection = {}
+        for j in range(len(captions)):
+            if captions[j].start.ordinal > timestamps[i]*1000 and captions[j].end.ordinal < timestamps[i + 1] * 1000:
+                if 'text' not in currentSection:
+                    currentSection['text'] = captions[j].text
+                else: 
+                    currentSection['text'] += ' ' + captions[j].text
+        out.append(currentSection)
+    return out
 
 def getCaptions(url):
     ydl = youtube_dl.YoutubeDL({'writesubtitles': True})
