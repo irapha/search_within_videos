@@ -12,7 +12,7 @@
 </form>
 
 
-<div id="progress" class="progress" style="width: 50%; margin: 50px;">
+<div id="progress" class="progress" style="display: none; width: 50%; margin: 50px;">
     <!--<div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">-->
 </div>
 
@@ -59,6 +59,10 @@ var nanobar = new Nanobar({
 var form = $("#addvideo");
 form.submit(function(e) {
 	e.preventDefault();
+
+  // show progress bar
+  $("#progress").show();
+
 	$.ajax({
 		type: form.attr("method"),
 		url: form.attr("action"),

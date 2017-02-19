@@ -94,7 +94,7 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length, progress_cb, so_fa
             # crop and add to list with incrementing timestamp
             x = col_idx * frame_width
             y = curr_img_row * frame_height
-            frames[timestamp] = (curr_img.crop((x, y, x+frame_width, y+frame_height)), img_keys[img_idx])
+            frames[timestamp] = (curr_img.crop((x, y, x+frame_width, y+frame_height)), img_keys[img_idx] + str(global_frame_idx))
             timestamp += frame_interval
 
             # update frontend progress bar
