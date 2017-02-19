@@ -12,7 +12,6 @@
 
 {% raw %}
 
-
 <!-- not real lmao this is it -->
 <div>
   <img src="https://i.ytimg.com/vi/ZaUB84dMQ9U/hqdefault.jpg?custom=true&w=336&h=188&stc=true&jpg444=true&jpgq=90&sp=68&sigh=uK1rbMa1Wwwo63_uAf5EcFpzSKU" />
@@ -32,7 +31,7 @@
 </div>
 
 
-<script type="text/html" id="hit-template">
+<!--<script type="text/html" id="hit-template">
 	<div class="hit">
 		<div class="hit-img">
 			<a href="{{url}}&t={{#helpers.divide}}{{time}}{{/helpers.divide}}s"><img src="{{image_url}}"/></a>
@@ -43,9 +42,11 @@
 			<p>Term occurs at {{#helpers.format}}{{time}}{{/helpers.format}}</p>
 		</div>
 	</div>
-</script>
+</script>-->
 
 <script>
+var client = algoliasearch('Y9MCTNJ20T', '5c85dabf76ed1ba90c86b74f3470d965');
+var helper = algoliasearchHelper(client, 'frames');
 
 var search = instantsearch({
 	appId: 'Y9MCTNJ20T',
@@ -58,6 +59,9 @@ var search = instantsearch({
 		  return;
 		}
 		helper.search();
+		helper.on('result', function(data){
+			console.log(data);
+		});
 		searchResults.show();
 	}
 });
