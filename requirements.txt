@@ -33,3 +33,5 @@ youtube-dl==2017.2.17
 algoliasearch==1.11.2
 celery
 redis
+google-cloud-storage==0.22.0
+pycaption==1.0.0
