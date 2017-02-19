@@ -26,7 +26,7 @@
 			<div class="hover_holder">
 			{{#each stamps}}
 			<div z-index="100" onclick="window.open('{{url}}&t={{this.sec}}','mywindow');"
-				style="cursor: pointer; margin-left: 20%;" class="hover"
+				style="cursor: pointer; margin-left: {{this.perc}}%;" class="hover"
 				value="{{this.image_url}}" onmouseover="showFrame(this)" url="{{url}}", onmouseout="hideFrame(this)">
         <div class="hover_line"></div>
 			</div>
@@ -35,7 +35,7 @@
 			</div>
 		</div>
 			<div class="vid_deets">
-				<div class="vid_title">{{title}}</div>
+				<div class="vid_title"><a href='{{url}}'>{{title}}</a></div>
 				<div class="vid_desc">{{desc}}</div>
 				<div class="vid_username">{{username}}</div>
       		</div>
@@ -68,11 +68,12 @@ var search = instantsearch({
 		helper.search();
 		helper.on('result', function(data){
 			$('#body_container').empty();
-			if (data.hits && data.hits.length > 0) {
+			if (data.hits && data.hits.length > 0 && data.query.length > 2) {
 				var dict = {};
 				for (var i = 0; i < data.hits.length; i++) {
 					var curr = data.hits[i];
-					curr.sec = curr.time/1000;
+					curr.sec = curr.time / 1000;
+					curr.perc = curr.sec / curr.vid_length * 100;
 					if (dict[curr.url]) {
 						dict[curr.url].stamps.push(curr);
 					}
