@@ -2,14 +2,35 @@
 
 {% block content %}
 
-<h1>VidViz</h1>
-<h3>Search Youtube videos by what appears in them, or find where things occur in a video.</h3>
-
-<input type="text" class="form-control" id="search-box" />
+<div id='header_container'>
+  <h1 id='main_title'>In<span id="tube">Tube</span></h1>
+  <h4>Search within YouTube videos</h4>
+  <input type="text" class="" id="search-box" />
+</div>
 <div id="hits-container"></div>
 <div id="pagination-container"></div>
 
 {% raw %}
+
+
+<!-- not real lmao this is it -->
+<div>
+  <img src="https://i.ytimg.com/vi/ZaUB84dMQ9U/hqdefault.jpg?custom=true&w=336&h=188&stc=true&jpg444=true&jpgq=90&sp=68&sigh=uK1rbMa1Wwwo63_uAf5EcFpzSKU" />
+  <div class="hover_holders">
+    <a href='timestamped video url'>
+      <div class="hover" value="store the frame img url here and modify the img tag above onhover (and on mouse leave you go back to thumbnail)" style="padding-left: 20%; /* this percentage is the same as how much percent in the video the timestamp is */"></div>
+    </a>
+    <a href='timestamped video url'>
+      <div class="hover" value="store the frame img url here and modify the img tag above onhover (and on mouse leave you go back to thumbnail)" style="padding-left: 40%; /* this percentage is the same as how much percent in the video the timestamp is */"></div>
+    </a>
+  </div>
+  <div class="vid_desc">
+    <div>Title</div>
+    <div>username</div>
+    <div>desc</div>
+  </div>
+</div>
+
 
 <script type="text/html" id="hit-template">
 	<div class="hit">

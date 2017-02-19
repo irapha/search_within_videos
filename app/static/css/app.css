@@ -3,15 +3,48 @@ body {
 }
 
 p, h1, h2, h3 {
-	color: #F8F8F8;
+	color: #424242;
+}
+
+h4 {
+  color: #9E9E9E;
+}
+
+#tube {
+  color: #F8F8F8;
+  background-color: #f44336;
+  border-radius: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+#main_title {
+  margin: 20px;
+}
+
+#header_container {
+  margin-top: 0px;
+  padding-top: 5px;
+  margin-bottom: 0px;
+  text-align: center;
+  background-color: #F8F8F8;
 }
 
 input {
-	border: none;
-	padding: 0px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 75%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #9E9E9E;
+  margin-left: auto;
+  margin-right: auto;
+	width: 600px;
+  height: 50px;
+  padding: 10px;
+  margin: 20px;
+}
+
+input,
+input::-webkit-input-placeholder {
+  font-size: 24px;
 }
 
 .hit {
