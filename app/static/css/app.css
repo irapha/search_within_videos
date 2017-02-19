@@ -6,8 +6,38 @@ p, h1, h2, h3 {
 	color: #424242;
 }
 
-h4 {
+form {
+  display: inline;
+}
+
+#or {
   color: #9E9E9E;
+  font-size: 20px;
+  margin: 10px;
+  display: inline-block;
+  height: 50px;
+}
+
+#tagline {
+  font-size: 27px;
+  color: #9E9E9E;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.ais-search-box {
+  width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  display:inline-block;
+}
+
+#progress {
+  margin-right: auto;
+  margin-left: auto;
+  width: 844px;
+  margin-bottom: 20px;
 }
 
 #tube {
@@ -18,8 +48,21 @@ h4 {
   padding-right: 4px;
 }
 
+#big-button {
+  color: #424242;
+  width: 200px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#url-box {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 #main_title {
-  margin: 20px;
+  margin: 20px 20px 0px 20px;
+  display: inline-block;
 }
 
 #body_container {
@@ -98,6 +141,8 @@ h4 {
 }
 
 .vid_title {
+  overflow: hidden;
+  height: 35px;
   font-size: 26px;
 }
 
@@ -122,6 +167,8 @@ input {
   height: 50px;
   padding: 10px;
   margin: 20px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 input,

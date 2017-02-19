@@ -2,19 +2,17 @@
 
 {% block content %}
 
-<h1>Add a Video</h1>
-
-<form id="addvideo" action="/add_video" method="POST" enctype="">
-  <div>
-    <input id="urlbox" class="input-lg" type="text" name="url">
-    <input type="submit" value="Process">
-  </div>
-
-</form>
-
-
-<div id="progress" class="progress" style="display: none; width: 50%; margin: 50px;">
+<div id='header_container'>
+  <h1 id='main_title'>In<span id="tube">Tube</span><span id="tagline">Add a video to search its content</h4></h1>
+  <form id="addvideo" action="/add_video" method="POST" enctype="">
+    <div>
+      <input id="url-box" class="" type="text" name="url" placeholder="YouTube URL">
+      <input id="big-button" type="submit" value="Process">
+    </div>
+  </form>
+  <div id="progress" class="progress" style="display: none;"></div>
 </div>
+
 
 <script>
 
