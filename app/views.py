@@ -10,7 +10,7 @@ from celery import Celery
 celery = Celery(app.import_name, backend='redis://localhost:6379/0',
                 broker='redis://localhost:6379/0')
 
-taskprogress = {}
+#taskprogress = {}
 
 @celery.task(bind=True)
 def process_video(self, url):
@@ -18,9 +18,9 @@ def process_video(self, url):
     """Background task that runs a long function with progress reports."""
     total = random.randint(10, 50)
     for i in range(total):
-        taskprogress[task.id] += 5
+        #taskprogress[task.id] += 5
         self.update_state(state='PROGRESS',
-                          meta={'current': taskprogress[task.id], 'total': 100})
+                          meta={'current': i, 'total': total})
         time.sleep(1)
     return {'current': 100, 'total': 100, 'status': 'Task completed!',
             'result': 42}
@@ -37,7 +37,7 @@ def add():
 def add_video():
     url = request.form["url"]
     task = process_video.apply_async(args=[url])
-    taskprogress[task.id] = 0
+    #taskprogress[task.id] = 0
     return jsonify({}), 202, {'Location': url_for('taskstatus', task_id=task.id)}
 
 @app.route('/progress')
