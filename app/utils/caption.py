@@ -11,19 +11,23 @@ def findMatches(captions):
         arr.append({'start':caption.start.ordinal, 'end': caption.end.ordinal, 'text': caption.text, 'video': url})
     index.add_objects(arr)
 
-def merge(captions, timestamps):
+def dict_format(captions, timestamps, progress_cb, so_far, task_weight):
     out = {}
     diff = (timestamps[1] - timestamps[0])
-    
-    for caption in captions:
+
+    total = len(captions)
+    for i, caption in enumerate(captions):
         caption_timestamp = caption.start.ordinal / 1000
         if diff * int(caption_timestamp / diff) not in out:
             out[diff * int(caption_timestamp / diff)] = caption.text
-        else: 
+        else:
             out[diff * int(caption_timestamp / diff)] += ' ' + caption.text
+
+        # update frontend progress bar
+        progress_cb(so_far + (task_weight * i / total), so_far + total)
     return out
 
-def getCaptions(url):
+def getCaptions(url, progress_cb, so_far, task_weight):
     ydl = youtube_dl.YoutubeDL({'writesubtitles': True})
     with ydl:
         res = ydl.extract_info(url, download=False)
@@ -35,10 +39,11 @@ def getCaptions(url):
                     handle.write(block)
             arr = WebVTTFile.open('temp.vtt')
             os.remove('temp.vtt')
+            progress_cb(so_far + task_weight, so_far + task_weight)
             return arr
         else:
             print ('Youtube Video does not have any english captions')
 
-def get_timestamped_captions(url, timestamps):
-    captions = getCaptions(url)
-    return merge(captions, timestamps)
+def get_timestamped_captions(url, timestamps, progress_cb, so_far, task_weight):
+    captions = getCaptions(url, progress_cb, so_far, task_weight * 0.9) # 90 percent of this task
+    return dict_format(captions, timestamps, progress_cb, so_far + task_weight * 0.9, task_weight * 0.1) # 10 percent

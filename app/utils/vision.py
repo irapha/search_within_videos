@@ -41,7 +41,7 @@ def get_mosaics(page_content):
 
         time.sleep(0.5) # do not set off youtube's firewall
         m_value += 1
-    
+
     return img_keys, imgs, l_value
 
 def get_vid_length(page_content):
@@ -68,7 +68,7 @@ def get_frame_dims(mosaic_w, mosaic_h, num_full_rows, num_last_row, shape):
 
     return frame_width, frame_height
 
-def get_timestamped_frames(img_keys, imgs, level, vid_length):
+def get_timestamped_frames(img_keys, imgs, level, vid_length, progress_cb, so_far, task_weight):
     level_to_mosaic_shape = {1: 10, 2: 5, 3: 9, 4: 3}
     shape = level_to_mosaic_shape[level] # each mosaic has shape x shape frames
     frame_interval = get_frame_interval(vid_length)
@@ -98,6 +98,9 @@ def get_timestamped_frames(img_keys, imgs, level, vid_length):
             frames[timestamp] = curr_img.crop((x, y, x+frame_width, y+frame_height))
             timestamp += frame_interval
 
+            # update frontend progress bar
+            progress_cb(so_far + (task_weight * global_frame_idx / num_frames), so_far + num_frames)
+
     return frames
 
 def get_labels(frames):
@@ -117,10 +120,12 @@ def get_labels(frames):
         i += 1
     return new_frames
 
-def get_labels_from_url(url):
+def get_labels_from_url(url, progress_cb, so_far, task_weight):
     page_content = get_page_source(url)
+    progress_cb(1, 100) # get progress bar started
     frames = get_timestamped_frames(
             *get_mosaics(page_content),
-            get_vid_length(page_content))
+            get_vid_length(page_content),
+            progress_cb, so_far + 5, task_weight - 5) # 5 percent to get mosaics
     return get_labels(frames)
 

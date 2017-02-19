@@ -14,14 +14,11 @@ celery = Celery(app.import_name, backend='redis://localhost:6379/0',
 
 @celery.task(bind=True)
 def process_video(self, url):
-    #tag.tag_and_upload(url)
     """Background task that runs a long function with progress reports."""
-    total = random.randint(10, 50)
-    for i in range(total):
-        #taskprogress[task.id] += 5
+    def progress_cb(done, total):
         self.update_state(state='PROGRESS',
                           meta={'current': i, 'total': total})
-        time.sleep(1)
+    tag.tag_and_upload(url, progress_cb)
     return {'current': 100, 'total': 100, 'status': 'Task completed!',
             'result': 42}
 
